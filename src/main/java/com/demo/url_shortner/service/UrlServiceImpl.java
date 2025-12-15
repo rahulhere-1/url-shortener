@@ -1,5 +1,7 @@
 package com.demo.url_shortner.service;
 
+import com.demo.url_shortner.dto.ShortUrlRequest;
+import com.demo.url_shortner.exceptions.UrlNotFound;
 import com.demo.url_shortner.model.ShortLongURLRelation;
 import com.demo.url_shortner.repo.UrlRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,15 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public String getLongUrl(String shortUrl){
-        ShortLongURLRelation urlObject = urlRepository.findById(shortUrl).orElseThrow(() -> new RuntimeException("Url Not Found"));
+        ShortLongURLRelation urlObject = urlRepository.findById(shortUrl).orElseThrow(() -> new UrlNotFound("Url Not Found"));
         return urlObject.getLongUrl();
+    }
+
+    public String generateShortUrl(ShortUrlRequest shortUrlRequestBody){
+        String longUrl = shortUrlRequestBody.getLongUrl();
+        
+        return null;
+
     }
 
 }

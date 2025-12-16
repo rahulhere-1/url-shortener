@@ -1,5 +1,6 @@
 package com.demo.url_shortner.controller;
 
+import com.demo.url_shortner.dto.ResponseMessage;
 import com.demo.url_shortner.dto.ShortUrlRequest;
 import com.demo.url_shortner.service.UrlService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,18 @@ public class UrlController {
     private UrlService urlService;
 
     @GetMapping("/getLongUrl")
-    public ResponseEntity<String> getLongUrl(@RequestParam String shortUrl){
+    public ResponseEntity<ResponseMessage> getLongUrl(@RequestParam String shortUrl){
         String longUrl = urlService.getLongUrl(shortUrl);
-        return new ResponseEntity<>(longUrl, HttpStatus.OK);
+        ResponseMessage response = new ResponseMessage();
+        response.setData(longUrl);
+        response.setStatus(HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/generateShortUrl")
-    public ResponseEntity<ShortUrlRequest> generateShortUrl(@RequestBody ShortUrlRequest shortUrlRequest){
-        String shortUrl = urlService.generateShortUrl(shortUrlRequest);
-        shortUrlRequest.setShortUrl(shortUrl);
-        return new ResponseEntity<>(shortUrlRequest,HttpStatus.CREATED);
+    public ResponseEntity<ResponseMessage> generateShortUrl(@RequestBody ShortUrlRequest shortUrlRequest){
+        ResponseMessage response = urlService.generateShortUrl(shortUrlRequest);
+        return new ResponseEntity<>(response,response.getStatus());
     }
 
     @GetMapping("/")

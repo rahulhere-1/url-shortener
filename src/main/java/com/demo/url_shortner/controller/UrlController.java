@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value = "/api")
 public class UrlController {
 
     @Autowired
@@ -19,9 +20,15 @@ public class UrlController {
         return new ResponseEntity<>(longUrl, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<String> generateShortUrl(@RequestBody ShortUrlRequest shortUrlRequest){
+    @PostMapping("/generateShortUrl")
+    public ResponseEntity<ShortUrlRequest> generateShortUrl(@RequestBody ShortUrlRequest shortUrlRequest){
+        String shortUrl = urlService.generateShortUrl(shortUrlRequest);
+        shortUrlRequest.setShortUrl(shortUrl);
+        return new ResponseEntity<>(shortUrlRequest,HttpStatus.CREATED);
+    }
 
-        return new ResponseEntity<>("successfully created.... ",HttpStatus.CREATED);
+    @GetMapping("/")
+    public ResponseEntity<String> healthCheck(){
+        return new ResponseEntity<>("server is up running...",HttpStatus.OK);
     }
 }
